@@ -1,0 +1,1933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prateek Model School - Student Admission & Records Portal</title>
+  <!-- Supabase Official Client Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #2563eb;
+      --primary-dark: #172554;
+      --accent: #d97706;
+      --accent-light: #f59e0b;
+      --bg-main: #f8fafc;
+      --bg-card: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --success: #10b981;
+      --danger: #ef4444;
+      --info: #0284c7;
+      --radius: 10px;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding-bottom: 60px;
+    }
+
+    header.school-header {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, #1d4ed8 100%);
+      color: #ffffff;
+      padding: 20px 32px;
+      box-shadow: var(--shadow-lg);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .school-logo-svg {
+      width: 72px;
+      height: 72px;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));
+      flex-shrink: 0;
+    }
+
+    .school-info h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .school-info p.motto {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      font-weight: 400;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-badges {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-badge {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #f8fafc;
+    }
+
+    .sync-status-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid #10b981;
+      color: #a7f3d0;
+      cursor: pointer;
+    }
+
+    .sync-status-pill.offline {
+      background: rgba(245, 158, 11, 0.2);
+      border-color: #f59e0b;
+      color: #fde68a;
+    }
+
+    .main-container {
+      max-width: 1300px;
+      margin: 28px auto;
+      padding: 0 24px;
+    }
+
+    .sync-banner {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: var(--radius);
+      padding: 14px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .sync-banner-text {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: #1e3a8a;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .stat-info .stat-value {
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .stat-info .stat-label {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .tabs-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      padding: 10px 22px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--primary);
+      background: #eff6ff;
+    }
+
+    .tab-btn.active {
+      color: #ffffff;
+      background: var(--primary);
+      box-shadow: 0 2px 4px rgba(30, 58, 138, 0.25);
+    }
+
+    .card-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      margin-bottom: 28px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 14px;
+    }
+
+    .panel-header h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .panel-header p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px 22px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .form-group label span.required {
+      color: var(--danger);
+      margin-left: 2px;
+    }
+
+    .form-control {
+      padding: 10px 14px;
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.92rem;
+      color: var(--text-main);
+      background-color: #ffffff;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 14px;
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border-color);
+      justify-content: flex-end;
+    }
+
+    .btn {
+      padding: 11px 24px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-light);
+      box-shadow: 0 4px 6px rgba(37, 99, 235, 0.25);
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-outline:hover {
+      background: #eff6ff;
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: #ffffff;
+    }
+
+    .btn-success:hover {
+      background: #059669;
+    }
+
+    .btn-sm {
+      padding: 6px 14px;
+      font-size: 0.82rem;
+      border-radius: 6px;
+    }
+
+    .table-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .search-filter-box {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .search-input-wrap {
+      position: relative;
+      min-width: 260px;
+      flex: 1;
+    }
+
+    .search-input-wrap input {
+      width: 100%;
+      padding: 9px 14px 9px 36px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border-color);
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .search-input-wrap input:focus {
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      pointer-events: none;
+    }
+
+    .filter-select {
+      padding: 9px 14px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border-color);
+      font-size: 0.88rem;
+      background: #ffffff;
+      outline: none;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      text-align: left;
+    }
+
+    table.data-table thead {
+      background: #f1f5f9;
+      color: #334155;
+    }
+
+    table.data-table th {
+      padding: 12px 14px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 2px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    table.data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    table.data-table tbody tr:hover {
+      background-color: #f8fafc;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 600;
+    }
+
+    .badge-primary { background: #dbeafe; color: #1e40af; }
+    .badge-gender-m { background: #e0f2fe; color: #0369a1; }
+    .badge-gender-f { background: #fce7f3; color: #be185d; }
+    .badge-blood { background: #fee2e2; color: #b91c1c; }
+
+    .action-btns {
+      display: flex;
+      gap: 6px;
+    }
+
+    .action-btn {
+      padding: 5px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background: #ffffff;
+      cursor: pointer;
+      font-size: 0.78rem;
+      transition: all 0.15s ease;
+      color: #475569;
+    }
+
+    .action-btn:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+
+    .action-btn.delete:hover {
+      background: #fee2e2;
+      color: #dc2626;
+      border-color: #fca5a5;
+    }
+
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toast {
+      background: #1e293b;
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: var(--shadow-lg);
+      font-size: 0.88rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: slideIn 0.3s ease-out forwards;
+    }
+
+    .toast.success { background: #065f46; }
+    .toast.error { background: #991b1b; }
+    .toast.info { background: #1e3a8a; }
+
+    @keyframes slideIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 620px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      animation: modalScale 0.2s ease-out;
+    }
+
+    @keyframes modalScale {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-header {
+    const DEFAULT_SUPABASE_URL = "https://your-project-id.supabase.co";
+const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."; 
+ background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%);
+      color: #ffffff;
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      font-size: 1.3rem;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      padding: 24px;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .detail-label {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #64748b;
+      letter-spacing: 0.04em;
+    }
+
+    .detail-value {
+      font-size: 0.95rem;
+      color: #0f172a;
+      font-weight: 600;
+    }
+
+    .modal-footer {
+      padding: 14px 24px;
+      background: #f8fafc;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 30px;
+    }
+
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .brand-section {
+        width: 100%;
+      }
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-actions {
+        flex-direction: column;
+      }
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="school-header">
+    <div class="header-content">
+      <div class="brand-section">
+        <svg class="school-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="48" fill="#F8FAFC" stroke="#F59E0B" stroke-width="3.5" />
+          <circle cx="50" cy="50" r="44" fill="#1E3A8A" />
+          <circle cx="50" cy="50" r="39" stroke="#F59E0B" stroke-width="1.5" stroke-dasharray="3 2" />
+          <path d="M22 56C21 44 26 36 34 30C29 36 28 44 28 54C28 58 26 62 22 64C24 61 24 58 22 56Z" fill="#F59E0B" opacity="0.9"/>
+          <path d="M78 56C79 44 74 36 66 30C71 36 72 44 72 54C72 58 74 62 78 64C76 61 76 58 78 56Z" fill="#F59E0B" opacity="0.9"/>
+          <path d="M48 46L48 57C48 58.1 48.9 59 50 59C51.1 59 52 58.1 52 57L52 46Z" fill="#F59E0B"/>
+          <path d="M46 45H54L52 48H48L46 45Z" fill="#F59E0B"/>
+          <path d="M50 31C50 31 53 36 53 38.5C53 40.5 51.5 42 50 42C48.5 42 47 40.5 47 38.5C47 36 50 31 50 31Z" fill="#EF4444"/>
+          <path d="M50 34C50 34 51.5 37 51.5 38.5C51.5 39.5 50.8 40.5 50 40.5C49.2 40.5 48.5 39.5 48.5 38.5C48.5 37 50 34 50 34Z" fill="#FBBF24"/>
+          <path d="M50 63C44 60 36 61 32 64V73C36 70 44 69 50 72C56 69 64 70 68 73V64C64 61 56 60 50 63Z" fill="#FFFFFF"/>
+          <path d="M50 63V72" stroke="#1E3A8A" stroke-width="1.5"/>
+          <path d="M35 66C39 64 45 63 49 65" stroke="#CBD5E1" stroke-width="1"/>
+          <path d="M65 66C61 64 55 63 51 65" stroke="#CBD5E1" stroke-width="1"/>
+          <path d="M26 80L33 76H67L74 80L69 84H31L26 80Z" fill="#F59E0B" stroke="#B45309" stroke-width="0.8"/>
+          <text x="50" y="82.5" font-size="5.5" font-weight="bold" fill="#1E3A8A" text-anchor="middle" font-family="sans-serif">EST. 2004</text>
+          <polygon points="50,17 51.5,21 56,21 52.5,23.5 54,28 50,25 46,28 47.5,23.5 44,21 48.5,21" fill="#F59E0B"/>
+        </svg>
+        <div class="school-info">
+          <h1>Prateek Model School</h1>
+          <p class="motto">
+            <span>Official Student Admission & Information System</span>
+            <span>•</span>
+            <span>Estd. 2004</span>
+          </p>
+        </div>
+      </div>
+      <div class="header-badges">
+        <span class="header-badge">CBSE Affiliation No: 3630198</span>
+        <button class="sync-status-pill offline" id="syncStatusBadge" onclick="openSyncModal()">
+          <span id="syncDot">🟠</span> <span id="syncStatusText">Local Storage Mode</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+
+    <div class="sync-banner" id="cloudSyncBanner">
+      <div class="sync-banner-text">
+        <span style="font-size: 1.3rem;">⚡</span>
+        <div>
+          <strong>Supabase PostgreSQL Cloud Database & Vercel Integration</strong>
+          <p style="font-size: 0.82rem; color: #475569;" id="bannerDescription">
+            Connect to your Supabase PostgreSQL database to store and sync student admissions in real-time across any domain.
+          </p>
+        </div>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="openSyncModal()">
+        ⚙️ Database Credentials
+      </button>
+    </div>
+
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #dbeafe; color: #1e40af;">🎓</div>
+        <div class="stat-info">
+          <div class="stat-value" id="kpiTotalStudents">20</div>
+          <div class="stat-label">Total Registered Students</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #e0e7ff; color: #4338ca;">🏫</div>
+        <div class="stat-info">
+          <div class="stat-value" id="kpiTotalClasses">10</div>
+          <div class="stat-label">Grades / Classes Active</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #dcfce7; color: #15803d;">👦</div>
+        <div class="stat-info">
+          <div class="stat-value" id="kpiMaleStudents">11</div>
+          <div class="stat-label">Boys Enrolled</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #fce7f3; color: #be185d;">👧</div>
+        <div class="stat-info">
+          <div class="stat-value" id="kpiFemaleStudents">9</div>
+          <div class="stat-label">Girls Enrolled</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="tabs-bar">
+      <button class="tab-btn active" onclick="switchTab('add')">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+        Add Student Entry
+      </button>
+      <button class="tab-btn" onclick="switchTab('directory')">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        Student Directory (<span id="tabCount">20</span>)
+      </button>
+      <button class="tab-btn" onclick="switchTab('dataSync')">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+        Cloud Database & Export
+      </button>
+    </div>
+
+    <!-- TAB 1: ADD STUDENT ENTRY FORM -->
+    <section id="tab-add" class="card-panel">
+      <div class="panel-header">
+        <div>
+          <h2>
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+            Student Admission Entry Form
+          </h2>
+          <p>Register a student into the Supabase PostgreSQL database</p>
+        </div>
+        <button class="btn btn-secondary btn-sm" type="button" onclick="fillSampleData()">
+          ⚡ Auto-Fill Sample Record
+        </button>
+      </div>
+
+      <form id="studentEntryForm" onsubmit="handleFormSubmit(event)">
+        <input type="hidden" id="editIndex" value="-1">
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="admissionNo">Admission Number <span class="required">*</span></label>
+            <input type="text" id="admissionNo" class="form-control" placeholder="e.g. PMS-2026-021" required>
+          </div>
+
+          <div class="form-group">
+            <label for="rollNo">Roll Number <span class="required">*</span></label>
+            <input type="number" id="rollNo" class="form-control" placeholder="e.g. 21" min="1" required>
+          </div>
+
+          <div class="form-group">
+            <label for="studentName">Student Full Name <span class="required">*</span></label>
+            <input type="text" id="studentName" class="form-control" placeholder="e.g. Aarav Sharma" required>
+          </div>
+
+          <div class="form-group">
+            <label for="grade">Class / Grade <span class="required">*</span></label>
+            <select id="grade" class="form-control" required>
+              <option value="">Select Class</option>
+              <option value="Nursery">Nursery</option>
+              <option value="LKG">LKG</option>
+              <option value="UKG">UKG</option>
+              <option value="Class 1">Class 1</option>
+              <option value="Class 2">Class 2</option>
+              <option value="Class 3">Class 3</option>
+              <option value="Class 4">Class 4</option>
+              <option value="Class 5">Class 5</option>
+              <option value="Class 6">Class 6</option>
+              <option value="Class 7">Class 7</option>
+              <option value="Class 8">Class 8</option>
+              <option value="Class 9">Class 9</option>
+              <option value="Class 10">Class 10</option>
+              <option value="Class 11">Class 11</option>
+              <option value="Class 12">Class 12</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="section">Section <span class="required">*</span></label>
+            <select id="section" class="form-control" required>
+              <option value="A">Section A</option>
+              <option value="B">Section B</option>
+              <option value="C">Section C</option>
+              <option value="D">Section D</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="gender">Gender <span class="required">*</span></label>
+            <select id="gender" class="form-control" required>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="dob">Date of Birth <span class="required">*</span></label>
+            <input type="date" id="dob" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label for="bloodGroup">Blood Group</label>
+            <select id="bloodGroup" class="form-control">
+              <option value="O+">O+</option>
+              <option value="A+">A+</option>
+              <option value="B+">B+</option>
+              <option value="AB+">AB+</option>
+              <option value="O-">O-</option>
+              <option value="A-">A-</option>
+              <option value="B-">B-</option>
+              <option value="AB-">AB-</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="parentName">Parent / Guardian Name <span class="required">*</span></label>
+            <input type="text" id="parentName" class="form-control" placeholder="Father or Mother's Full Name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Contact Mobile Number <span class="required">*</span></label>
+            <input type="tel" id="phone" class="form-control" placeholder="e.g. +91 98765 43210" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" class="form-control" placeholder="parent@example.com">
+          </div>
+
+          <div class="form-group">
+            <label for="admDate">Date of Admission <span class="required">*</span></label>
+            <input type="date" id="admDate" class="form-control" required value="2026-06-01">
+          </div>
+
+          <div class="form-group full-width">
+            <label for="address">Residential Address</label>
+            <input type="text" id="address" class="form-control" placeholder="House/Flat No, Street, Locality, City">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" onclick="resetEntryForm()">
+            Clear Form
+          </button>
+          <button type="submit" class="btn btn-primary" id="submitBtn">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
+            Save to Cloud Database
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- TAB 2: STUDENT DIRECTORY TABLE -->
+    <section id="tab-directory" class="card-panel" style="display: none;">
+      <div class="panel-header">
+        <div>
+          <h2>
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            Student Records Directory
+          </h2>
+          <p>Search, filter, inspect, edit, or delete enrolled student entries</p>
+        </div>
+        <div class="toolbar-actions">
+          <button class="btn btn-primary btn-sm" onclick="fetchFromSupabase()">
+            🔄 Refresh Supabase
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="exportToCSV()">
+            📥 Download CSV
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="window.print()">
+            🖨️ Print Directory
+          </button>
+        </div>
+      </div>
+
+      <div class="table-toolbar">
+        <div class="search-filter-box">
+          <div class="search-input-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Search by name, roll no, admission no..." oninput="renderTable()">
+          </div>
+          <select id="filterClass" class="filter-select" onchange="renderTable()">
+            <option value="">All Classes</option>
+            <option value="Class 1">Class 1</option>
+            <option value="Class 2">Class 2</option>
+            <option value="Class 3">Class 3</option>
+            <option value="Class 4">Class 4</option>
+            <option value="Class 5">Class 5</option>
+            <option value="Class 6">Class 6</option>
+            <option value="Class 7">Class 7</option>
+            <option value="Class 8">Class 8</option>
+            <option value="Class 9">Class 9</option>
+            <option value="Class 10">Class 10</option>
+          </select>
+          <select id="filterGender" class="filter-select" onchange="renderTable()">
+            <option value="">All Genders</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Adm No</th>
+              <th>Roll</th>
+              <th>Student Name</th>
+              <th>Class & Sec</th>
+              <th>Gender</th>
+              <th>DOB</th>
+              <th>Blood</th>
+              <th>Parent / Guardian</th>
+              <th>Contact Phone</th>
+              <th style="text-align: center;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="studentsTableBody">
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 3: CLOUD DATABASE & EXCEL -->
+    <section id="tab-dataSync" class="card-panel" style="display: none;">
+      <div class="panel-header">
+        <div>
+          <h2>
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            Supabase Cloud & Data Sync
+          </h2>
+          <p>Connect your Supabase PostgreSQL project or export data offline</p>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
+        <div style="background: #f8fafc; border: 1.5px solid var(--border-color); border-radius: 8px; padding: 24px;">
+          <div style="font-size: 2.2rem; margin-bottom: 12px;">⚡</div>
+          <h3 style="font-size: 1.05rem; margin-bottom: 6px;">Supabase PostgreSQL Database</h3>
+          <p style="color: var(--text-muted); font-size: 0.86rem; margin-bottom: 16px;">
+            Configure your Supabase Project URL and Anon Key to enable live cloud synchronization.
+          </p>
+          <button class="btn btn-primary btn-sm" onclick="openSyncModal()">
+            ⚙️ Configure Supabase Credentials
+          </button>
+        </div>
+
+        <div style="background: #f8fafc; border: 1.5px solid var(--border-color); border-radius: 8px; padding: 24px;">
+          <div style="font-size: 2.2rem; margin-bottom: 12px;">📥</div>
+          <h3 style="font-size: 1.05rem; margin-bottom: 6px;">Download Offline Roster</h3>
+          <p style="color: var(--text-muted); font-size: 0.86rem; margin-bottom: 16px;">
+            Export all student records into CSV/Excel format anytime.
+          </p>
+          <button class="btn btn-success btn-sm" onclick="exportToCSV()">
+            ⬇️ Download Excel/CSV Roster
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Supabase Credentials Configuration Modal -->
+  <div class="modal-overlay" id="syncModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>⚡ Supabase Database Configuration</h3>
+        <button class="modal-close" onclick="closeSyncModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.88rem; color: #475569; margin-bottom: 16px;">
+          Enter your Supabase Project URL and Public Anon Key below. You can also paste them into the <code>DEFAULT_SUPABASE_URL</code> and <code>DEFAULT_SUPABASE_ANON_KEY</code> variables in <code>index.html</code> so all devices connect automatically!
+        </p>
+
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label for="sbUrlInput">Supabase Project URL</label>
+          <input type="url" id="sbUrlInput" class="form-control" placeholder="https://your-project.supabase.co">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label for="sbKeyInput">Supabase Public Anon Key</label>
+          <input type="text" id="sbKeyInput" class="form-control" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
+        </div>
+
+        <div style="background: #f1f5f9; border-radius: 8px; padding: 14px; font-size: 0.82rem; color: #334155; line-height: 1.6;">
+          <strong>Quick Setup:</strong>
+          <ol style="margin-left: 18px; margin-top: 6px;">
+            <li>Create a free project at <a href="https://supabase.com" target="_blank" style="color: #2563eb;">supabase.com</a>.</li>
+            <li>In the <strong>SQL Editor</strong>, run the provided <code>supabase_setup.sql</code> script.</li>
+            <li>In <strong>Project Settings &gt; API</strong>, copy your <strong>Project URL</strong> and <strong>anon public key</strong>.</li>
+            <li>Paste them above and click <strong>Connect</strong>.</li>
+          </ol>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-sm" onclick="closeSyncModal()">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="saveSyncSettings()">Save & Connect</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Student Profile Detail Modal -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalStudentName">Student Profile</h3>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span class="detail-label">Admission Number</span>
+            <span class="detail-value" id="modalAdmNo">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Roll Number</span>
+            <span class="detail-value" id="modalRollNo">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Class & Section</span>
+            <span class="detail-value" id="modalClassSec">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Gender</span>
+            <span class="detail-value" id="modalGender">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Date of Birth</span>
+            <span class="detail-value" id="modalDOB">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Blood Group</span>
+            <span class="detail-value" id="modalBlood">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Parent / Guardian</span>
+            <span class="detail-value" id="modalParent">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Contact Phone</span>
+            <span class="detail-value" id="modalPhone">-</span>
+          </div>
+          <div class="detail-item" style="grid-column: 1 / -1;">
+            <span class="detail-label">Email Address</span>
+            <span class="detail-value" id="modalEmail">-</span>
+          </div>
+          <div class="detail-item" style="grid-column: 1 / -1;">
+            <span class="detail-label">Residential Address</span>
+            <span class="detail-value" id="modalAddress">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Admission Date</span>
+            <span class="detail-value" id="modalAdmDate">-</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <footer>
+    <p>&copy; 2026 Prateek Model School. Student Information System & Admissions Management.</p>
+  </footer>
+
+  <script>
+    // =========================================================================
+    // SUPABASE CLOUD CONFIGURATION:
+    // If you paste your credentials below once, every user on any computer
+    // or domain will connect to your PostgreSQL database automatically!
+    // =========================================================================
+    const DEFAULT_SUPABASE_URL = "";
+    const DEFAULT_SUPABASE_ANON_KEY = "";
+
+    // Embedded initial local data
+    const INITIAL_RECORDS = [
+  {
+    "admissionNo": "PMS-2026-001",
+    "rollNo": 1,
+    "name": "Aarav Sharma",
+    "grade": "Class 5",
+    "section": "A",
+    "gender": "Male",
+    "dob": "2016-04-12",
+    "bloodGroup": "O+",
+    "parent": "Rajesh Sharma",
+    "phone": "+91 98765 43210",
+    "email": "rajesh.sharma@example.com",
+    "address": "Plot 42, Green Valley, Hyderabad",
+    "admDate": "2026-06-01"
+  },
+  {
+    "admissionNo": "PMS-2026-002",
+    "rollNo": 2,
+    "name": "Ananya Verma",
+    "grade": "Class 5",
+    "section": "A",
+    "gender": "Female",
+    "dob": "2016-08-22",
+    "bloodGroup": "B+",
+    "parent": "Sunita Verma",
+    "phone": "+91 98765 43211",
+    "email": "sunita.verma@example.com",
+    "address": "H.No 12-4, Madhapur, Hyderabad",
+    "admDate": "2026-06-01"
+  },
+  {
+    "admissionNo": "PMS-2026-003",
+    "rollNo": 3,
+    "name": "Rohan Patel",
+    "grade": "Class 5",
+    "section": "B",
+    "gender": "Male",
+    "dob": "2016-02-18",
+    "bloodGroup": "A+",
+    "parent": "Ketan Patel",
+    "phone": "+91 98765 43212",
+    "email": "ketan.patel@example.com",
+    "address": "Flat 301, Sunrise Apts, Gachibowli",
+    "admDate": "2026-06-02"
+  },
+  {
+    "admissionNo": "PMS-2026-004",
+    "rollNo": 4,
+    "name": "Priya Singh",
+    "grade": "Class 6",
+    "section": "A",
+    "gender": "Female",
+    "dob": "2015-11-05",
+    "bloodGroup": "AB+",
+    "parent": "Vikram Singh",
+    "phone": "+91 98765 43213",
+    "email": "vikram.singh@example.com",
+    "address": "Villa 9, Jubilee Meadows, Hyderabad",
+    "admDate": "2026-06-02"
+  },
+  {
+    "admissionNo": "PMS-2026-005",
+    "rollNo": 5,
+    "name": "Kabir Gupta",
+    "grade": "Class 6",
+    "section": "A",
+    "gender": "Male",
+    "dob": "2015-09-30",
+    "bloodGroup": "O+",
+    "parent": "Amit Gupta",
+    "phone": "+91 98765 43214",
+    "email": "amit.gupta@example.com",
+    "address": "15-B, Banjara Hills, Hyderabad",
+    "admDate": "2026-06-03"
+  },
+  {
+    "admissionNo": "PMS-2026-006",
+    "rollNo": 6,
+    "name": "Diya Nair",
+    "grade": "Class 6",
+    "section": "B",
+    "gender": "Female",
+    "dob": "2015-05-14",
+    "bloodGroup": "A-",
+    "parent": "Radhika Nair",
+    "phone": "+91 98765 43215",
+    "email": "radhika.nair@example.com",
+    "address": "Plot 88, Kondapur, Hyderabad",
+    "admDate": "2026-06-03"
+  },
+  {
+    "admissionNo": "PMS-2026-007",
+    "rollNo": 7,
+    "name": "Vihaan Rao",
+    "grade": "Class 7",
+    "section": "A",
+    "gender": "Male",
+    "dob": "2014-07-25",
+    "bloodGroup": "B+",
+    "parent": "Suresh Rao",
+    "phone": "+91 98765 43216",
+    "email": "suresh.rao@example.com",
+    "address": "H.No 4-89, Serilingampalle, Hyderabad",
+    "admDate": "2026-06-05"
+  },
+  {
+    "admissionNo": "PMS-2026-008",
+    "rollNo": 8,
+    "name": "Meera Joshi",
+    "grade": "Class 7",
+    "section": "A",
+    "gender": "Female",
+    "dob": "2014-12-10",
+    "bloodGroup": "O+",
+    "parent": "Pradeep Joshi",
+    "phone": "+91 98765 43217",
+    "email": "pradeep.joshi@example.com",
+    "address": "Flat 402, Lotus Towers, Miyapur",
+    "admDate": "2026-06-05"
+  },
+  {
+    "admissionNo": "PMS-2026-009",
+    "rollNo": 9,
+    "name": "Arjun Deshmukh",
+    "grade": "Class 8",
+    "section": "A",
+    "gender": "Male",
+    "dob": "2013-03-19",
+    "bloodGroup": "B-",
+    "parent": "Nitin Deshmukh",
+    "phone": "+91 98765 43218",
+    "email": "nitin.deshmukh@example.com",
+    "address": "Road No 3, Kukatpally, Hyderabad",
+    "admDate": "2026-06-06"
+  },
+  {
+    "admissionNo": "PMS-2026-010",
+    "rollNo": 10,
+    "name": "Ishaan Kulkarni",
+    "grade": "Class 8",
+    "section": "B",
+    "gender": "Male",
+    "dob": "2013-10-08",
+    "bloodGroup": "A+",
+    "parent": "Manish Kulkarni",
+    "phone": "+91 98765 43219",
+    "email": "manish.kulkarni@example.com",
+    "address": "Block C-12, Cyber Gateway, Hitec City",
+    "admDate": "2026-06-06"
+  },
+  {
+    "admissionNo": "PMS-2026-011",
+    "rollNo": 11,
+    "name": "Tanvi Mehta",
+    "grade": "Class 9",
+    "section": "A",
+    "gender": "Female",
+    "dob": "2012-06-15",
+    "bloodGroup": "O+",
+    "parent": "Sanjay Mehta",
+    "phone": "+91 98765 43220",
+    "email": "sanjay.mehta@example.com",
+    "address": "Flat 104, Emerald Heights, Manikonda",
+    "admDate": "2026-06-08"
+  },
+  {
+    "admissionNo": "PMS-2026-012",
+    "rollNo": 12,
+    "name": "Devendra Yadav",
+    "grade": "Class 9",
+    "section": "B",
+    "gender": "Male",
+    "dob": "2012-01-29",
+    "bloodGroup": "B+",
+    "parent": "Mahesh Yadav",
+    "phone": "+91 98765 43221",
+    "email": "mahesh.yadav@example.com",
+    "address": "Plot 17, Chandanagar, Hyderabad",
+    "admDate": "2026-06-08"
+  },
+  {
+    "admissionNo": "PMS-2026-013",
+    "rollNo": 13,
+    "name": "Sanya Malhotra",
+    "grade": "Class 10",
+    "section": "A",
+    "gender": "Female",
+    "dob": "2011-08-04",
+    "bloodGroup": "AB-",
+    "parent": "Deepak Malhotra",
+    "phone": "+91 98765 43222",
+    "email": "deepak.malhotra@example.com",
+    "address": "Villa 22, Whispering Palms, Nanakramguda",
+    "admDate": "2026-06-10"
+  },
+  {
+    "admissionNo": "PMS-2026-014",
+    "rollNo": 14,
+    "name": "Aditya Kumar",
+    "grade": "Class 10",
+    "section": "A",
+    "gender": "Male",
+    "dob": "2011-04-17",
+    "bloodGroup": "A+",
+    "parent": "Ramesh Kumar",
+    "phone": "+91 98765 43223",
+    "email": "ramesh.kumar@example.com",
+    "address": "H.No 6-21, Tellapur, Hyderabad",
+    "admDate": "2026-06-10"
+  },
+  {
+    "admissionNo": "PMS-2026-015",
+    "rollNo": 15,
+    "name": "Riya Sen",
+    "grade": "Class 10",
+    "section": "B",
+    "gender": "Female",
+    "dob": "2011-12-02",
+    "bloodGroup": "O+",
+    "parent": "Subhash Sen",
+    "phone": "+91 98765 43224",
+    "email": "subhash.sen@example.com",
+    "address": "Flat 505, Palm Grove, Financial District",
+    "admDate": "2026-06-11"
+  },
+  {
+    "admissionNo": "PMS-2026-016",
+    "rollNo": 16,
+    "name": "Karthik Reddy",
+    "grade": "Class 4",
+    "section": "A",
+    "gender": "Male",
+    "dob": "2017-03-14",
+    "bloodGroup": "B+",
+    "parent": "Venkat Reddy",
+    "phone": "+91 98765 43225",
+    "email": "venkat.reddy@example.com",
+    "address": "Plot 51, Pragathi Nagar, Hyderabad",
+    "admDate": "2026-06-12"
+  },
+  {
+    "admissionNo": "PMS-2026-017",
+    "rollNo": 17,
+    "name": "Suhani Bhatia",
+    "grade": "Class 4",
+    "section": "B",
+    "gender": "Female",
+    "dob": "2017-09-09",
+    "bloodGroup": "A+",
+    "parent": "Gaurav Bhatia",
+    "phone": "+91 98765 43226",
+    "email": "gaurav.bhatia@example.com",
+    "address": "Flat 202, Harmony Crest, Hafeezpet",
+    "admDate": "2026-06-12"
+  },
+  {
+    "admissionNo": "PMS-2026-018",
+    "rollNo": 18,
+    "name": "Dhruv Chawla",
+    "grade": "Class 3",
+    "section": "A",
+    "gender": "Male",
+    "dob": "2018-05-20",
+    "bloodGroup": "O-",
+    "parent": "Pankaj Chawla",
+    "phone": "+91 98765 43227",
+    "email": "pankaj.chawla@example.com",
+    "address": "House 8A, Hill Ridge Springs, Gachibowli",
+    "admDate": "2026-06-15"
+  },
+  {
+    "admissionNo": "PMS-2026-019",
+    "rollNo": 19,
+    "name": "Navya Pillai",
+    "grade": "Class 2",
+    "section": "A",
+    "gender": "Female",
+    "dob": "2019-11-11",
+    "bloodGroup": "B+",
+    "parent": "Biju Pillai",
+    "phone": "+91 98765 43228",
+    "email": "biju.pillai@example.com",
+    "address": "Flat 12B, Aparna Sarovar, Nallagandla",
+    "admDate": "2026-06-15"
+  },
+  {
+    "admissionNo": "PMS-2026-020",
+    "rollNo": 20,
+    "name": "Reyansh Aggarwal",
+    "grade": "Class 1",
+    "section": "A",
+    "gender": "Male",
+    "dob": "2020-07-07",
+    "bloodGroup": "O+",
+    "parent": "Vishal Aggarwal",
+    "phone": "+91 98765 43229",
+    "email": "vishal.aggarwal@example.com",
+    "address": "Villa 104, Golf View, Gopanpally",
+    "admDate": "2026-06-16"
+  }
+];
+
+    let students = [];
+    let supabaseUrl = localStorage.getItem('pms_supabase_url') || DEFAULT_SUPABASE_URL;
+    let supabaseKey = localStorage.getItem('pms_supabase_key') || DEFAULT_SUPABASE_ANON_KEY;
+    let supabaseClient = null;
+
+    function initSupabase() {
+      if (supabaseUrl && supabaseKey && window.supabase) {
+        try {
+          supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+          // Set up realtime channel
+          supabaseClient
+            .channel('public:students')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'students' }, () => {
+              fetchFromSupabase(true);
+            })
+            .subscribe();
+          return true;
+        } catch (e) {
+          console.error('Supabase init error:', e);
+          supabaseClient = null;
+          return false;
+        }
+      }
+      supabaseClient = null;
+      return false;
+    }
+
+    function initData() {
+      initSupabase();
+      updateSyncStatusUI();
+
+      const stored = localStorage.getItem('prateek_model_school_students');
+      if (stored) {
+        try {
+          students = JSON.parse(stored);
+        } catch(e) {
+          students = [...INITIAL_RECORDS];
+        }
+      } else {
+        students = [...INITIAL_RECORDS];
+        saveLocalData();
+      }
+      updateKPIs();
+      renderTable();
+
+      // If Supabase is active, fetch from PostgreSQL
+      if (supabaseClient) {
+        fetchFromSupabase(true);
+      }
+    }
+
+    function updateSyncStatusUI() {
+      const badge = document.getElementById('syncStatusBadge');
+      const dot = document.getElementById('syncDot');
+      const text = document.getElementById('syncStatusText');
+      const desc = document.getElementById('bannerDescription');
+
+      if (supabaseClient) {
+        badge.className = 'sync-status-pill';
+        dot.innerText = '🟢';
+        text.innerText = 'Connected to Supabase';
+        desc.innerText = 'Connected to Supabase PostgreSQL database. Real-time sync enabled across all devices.';
+      } else {
+        badge.className = 'sync-status-pill offline';
+        dot.innerText = '🟠';
+        text.innerText = 'Local Storage Mode';
+        desc.innerText = 'Operating in local browser storage. Connect Supabase to sync PostgreSQL records across any domain.';
+      }
+    }
+
+    function openSyncModal() {
+      document.getElementById('sbUrlInput').value = supabaseUrl;
+      document.getElementById('sbKeyInput').value = supabaseKey;
+      document.getElementById('syncModal').classList.add('active');
+    }
+
+    function closeSyncModal() {
+      document.getElementById('syncModal').classList.remove('active');
+    }
+
+    function saveSyncSettings() {
+      const url = document.getElementById('sbUrlInput').value.trim();
+      const key = document.getElementById('sbKeyInput').value.trim();
+      supabaseUrl = url;
+      supabaseKey = key;
+      localStorage.setItem('pms_supabase_url', url);
+      localStorage.setItem('pms_supabase_key', key);
+      
+      initSupabase();
+      updateSyncStatusUI();
+      closeSyncModal();
+
+      if (supabaseClient) {
+        showToast('Connected to Supabase PostgreSQL database!', 'success');
+        fetchFromSupabase();
+      } else {
+        showToast('Operating in local storage mode.', 'info');
+      }
+    }
+
+    function saveLocalData() {
+      localStorage.setItem('prateek_model_school_students', JSON.stringify(students));
+      updateKPIs();
+    }
+
+    function updateKPIs() {
+      document.getElementById('kpiTotalStudents').innerText = students.length;
+      document.getElementById('tabCount').innerText = students.length;
+      
+      const uniqueGrades = new Set(students.map(s => s.grade));
+      document.getElementById('kpiTotalClasses').innerText = uniqueGrades.size;
+
+      const males = students.filter(s => s.gender === 'Male').length;
+      const females = students.filter(s => s.gender === 'Female').length;
+      document.getElementById('kpiMaleStudents').innerText = males;
+      document.getElementById('kpiFemaleStudents').innerText = females;
+    }
+
+    function switchTab(tabKey) {
+      document.getElementById('tab-add').style.display = tabKey === 'add' ? 'block' : 'none';
+      document.getElementById('tab-directory').style.display = tabKey === 'directory' ? 'block' : 'none';
+      document.getElementById('tab-dataSync').style.display = tabKey === 'dataSync' ? 'block' : 'none';
+
+      document.querySelectorAll('.tab-btn').forEach((btn) => btn.classList.remove('active'));
+      if (tabKey === 'add') document.querySelectorAll('.tab-btn')[0].classList.add('active');
+      if (tabKey === 'directory') {
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        renderTable();
+      }
+      if (tabKey === 'dataSync') document.querySelectorAll('.tab-btn')[2].classList.add('active');
+    }
+
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `<span>${type === 'success' ? '✅' : (type === 'error' ? '⚠️' : 'ℹ️')}</span><span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3500);
+    }
+
+    async function handleFormSubmit(event) {
+      event.preventDefault();
+      const editIndex = parseInt(document.getElementById('editIndex').value);
+
+      const record = {
+        admissionNo: document.getElementById('admissionNo').value.trim(),
+        rollNo: parseInt(document.getElementById('rollNo').value),
+        name: document.getElementById('studentName').value.trim(),
+        grade: document.getElementById('grade').value,
+        section: document.getElementById('section').value,
+        gender: document.getElementById('gender').value,
+        dob: document.getElementById('dob').value,
+        bloodGroup: document.getElementById('bloodGroup').value,
+        parent: document.getElementById('parentName').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        email: document.getElementById('email').value.trim() || 'N/A',
+        address: document.getElementById('address').value.trim() || 'N/A',
+        admDate: document.getElementById('admDate').value
+      };
+
+      if (editIndex >= 0 && editIndex < students.length) {
+        // UPDATE
+        const oldAdmNo = students[editIndex].admissionNo;
+        students[editIndex] = record;
+        saveLocalData();
+        showToast(`Record for "${record.name}" updated locally.`);
+
+        if (supabaseClient) {
+          try {
+            const { error } = await supabaseClient
+              .from('students')
+              .update({
+                roll_no: record.rollNo,
+                name: record.name,
+                grade: record.grade,
+                section: record.section,
+                gender: record.gender,
+                dob: record.dob,
+                blood_group: record.bloodGroup,
+                parent_name: record.parent,
+                phone: record.phone,
+                email: record.email,
+                address: record.address,
+                admission_date: record.admDate
+              })
+              .eq('admission_no', oldAdmNo);
+
+            if (error) throw error;
+            showToast(`Updated "${record.name}" in Supabase!`, 'success');
+          } catch (err) {
+            console.error(err);
+            showToast('Supabase update failed.', 'error');
+          }
+        }
+      } else {
+        // INSERT
+        const exists = students.some(s => s.admissionNo.toLowerCase() === record.admissionNo.toLowerCase());
+        if (exists) {
+          showToast(`Admission number ${record.admissionNo} is already registered!`, 'error');
+          return;
+        }
+        students.push(record);
+        saveLocalData();
+        showToast(`Student "${record.name}" registered locally.`);
+
+        if (supabaseClient) {
+          try {
+            const { error } = await supabaseClient
+              .from('students')
+              .insert([{
+                admission_no: record.admissionNo,
+                roll_no: record.rollNo,
+                name: record.name,
+                grade: record.grade,
+                section: record.section,
+                gender: record.gender,
+                dob: record.dob,
+                blood_group: record.bloodGroup,
+                parent_name: record.parent,
+                phone: record.phone,
+                email: record.email,
+                address: record.address,
+                admission_date: record.admDate
+              }]);
+
+            if (error) throw error;
+            showToast(`Saved "${record.name}" to Supabase!`, 'success');
+          } catch (err) {
+            console.error(err);
+            showToast('Supabase insert failed. Check RLS policies.', 'error');
+          }
+        }
+      }
+
+      resetEntryForm();
+      switchTab('directory');
+    }
+
+    async function fetchFromSupabase(silent = false) {
+      if (!supabaseClient) {
+        if (!silent) showToast("Supabase not configured.", "error");
+        return;
+      }
+      if (!silent) showToast("Fetching student records from Supabase...", "info");
+
+      try {
+        const { data, error } = await supabaseClient
+          .from('students')
+          .select('*')
+          .order('roll_no', { ascending: true });
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          students = data.map(item => ({
+            admissionNo: item.admission_no,
+            rollNo: item.roll_no,
+            name: item.name,
+            grade: item.grade,
+            section: item.section,
+            gender: item.gender,
+            dob: item.dob,
+            bloodGroup: item.blood_group,
+            parent: item.parent_name,
+            phone: item.phone,
+            email: item.email,
+            address: item.address,
+            admDate: item.admission_date
+          }));
+          saveLocalData();
+          renderTable();
+          if (!silent) showToast(`Loaded ${data.length} records from Supabase!`, 'success');
+        } else {
+          if (!silent) showToast("Supabase table is empty.", "info");
+        }
+      } catch (err) {
+        console.error(err);
+        if (!silent) showToast("Error connecting to Supabase table.", "error");
+      }
+    }
+
+    function resetEntryForm() {
+      document.getElementById('studentEntryForm').reset();
+      document.getElementById('editIndex').value = "-1";
+      document.getElementById('submitBtn').innerHTML = `
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
+        Save to Cloud Database
+      `;
+      const nextNum = students.length + 1;
+      document.getElementById('admissionNo').value = `PMS-2026-${String(nextNum).padStart(3, '0')}`;
+      document.getElementById('rollNo').value = nextNum;
+      document.getElementById('admDate').value = '2026-06-01';
+    }
+
+    function fillSampleData() {
+      const nextNum = students.length + 1;
+      document.getElementById('admissionNo').value = `PMS-2026-${String(nextNum).padStart(3, '0')}`;
+      document.getElementById('rollNo').value = nextNum;
+      document.getElementById('studentName').value = "Samarth Deshmukh";
+      document.getElementById('grade').value = "Class 5";
+      document.getElementById('section').value = "A";
+      document.getElementById('gender').value = "Male";
+      document.getElementById('dob').value = "2016-03-15";
+      document.getElementById('bloodGroup').value = "O+";
+      document.getElementById('parentName').value = "Naveen Deshmukh";
+      document.getElementById('phone').value = "+91 98450 12345";
+      document.getElementById('email').value = "naveen.deshmukh@example.com";
+      document.getElementById('address').value = "Flat 402, Prateek Enclave, Serilingampalle";
+      document.getElementById('admDate').value = "2026-06-01";
+      showToast("Sample student details populated into form.");
+    }
+
+    function editStudent(index) {
+      const s = students[index];
+      if (!s) return;
+      document.getElementById('editIndex').value = index;
+      document.getElementById('admissionNo').value = s.admissionNo;
+      document.getElementById('rollNo').value = s.rollNo;
+      document.getElementById('studentName').value = s.name;
+      document.getElementById('grade').value = s.grade;
+      document.getElementById('section').value = s.section;
+      document.getElementById('gender').value = s.gender;
+      document.getElementById('dob').value = s.dob;
+      document.getElementById('bloodGroup').value = s.bloodGroup;
+      document.getElementById('parentName').value = s.parent;
+      document.getElementById('phone').value = s.phone;
+      document.getElementById('email').value = s.email === 'N/A' ? '' : s.email;
+      document.getElementById('address').value = s.address === 'N/A' ? '' : s.address;
+      document.getElementById('admDate').value = s.admDate;
+
+      document.getElementById('submitBtn').innerHTML = `
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+        Update Student Record
+      `;
+      switchTab('add');
+    }
+
+    async function deleteStudent(index) {
+      const s = students[index];
+      if (!s) return;
+      if (confirm(`Are you sure you want to delete student record for "${s.name}" (${s.admissionNo})?`)) {
+        const admNoToDelete = s.admissionNo;
+        students.splice(index, 1);
+        saveLocalData();
+        renderTable();
+        showToast(`Record for "${s.name}" removed from local view.`, 'info');
+
+        if (supabaseClient) {
+          try {
+            const { error } = await supabaseClient
+              .from('students')
+              .delete()
+              .eq('admission_no', admNoToDelete);
+            if (error) throw error;
+            showToast(`Deleted from Supabase!`, 'success');
+          } catch (err) {
+            console.error(err);
+            showToast('Failed to delete from Supabase.', 'error');
+          }
+        }
+      }
+    }
+
+    function viewDetails(index) {
+      const s = students[index];
+      if (!s) return;
+      document.getElementById('modalStudentName').innerText = s.name + " (" + s.admissionNo + ")";
+      document.getElementById('modalAdmNo').innerText = s.admissionNo;
+      document.getElementById('modalRollNo').innerText = s.rollNo;
+      document.getElementById('modalClassSec').innerText = s.grade + " - Sec " + s.section;
+      document.getElementById('modalGender').innerText = s.gender;
+      document.getElementById('modalDOB').innerText = s.dob;
+      document.getElementById('modalBlood').innerText = s.bloodGroup;
+      document.getElementById('modalParent').innerText = s.parent;
+      document.getElementById('modalPhone').innerText = s.phone;
+      document.getElementById('modalEmail').innerText = s.email;
+      document.getElementById('modalAddress').innerText = s.address;
+      document.getElementById('modalAdmDate').innerText = s.admDate;
+
+      document.getElementById('detailModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('detailModal').classList.remove('active');
+    }
+
+    function renderTable() {
+      const search = (document.getElementById('searchInput').value || '').toLowerCase();
+      const filterGrade = document.getElementById('filterClass').value;
+      const filterGender = document.getElementById('filterGender').value;
+
+      const tbody = document.getElementById('studentsTableBody');
+      tbody.innerHTML = '';
+
+      const filtered = students.filter(s => {
+        const matchesSearch = !search || 
+          s.name.toLowerCase().includes(search) || 
+          s.admissionNo.toLowerCase().includes(search) ||
+          String(s.rollNo).includes(search) ||
+          s.parent.toLowerCase().includes(search);
+        const matchesGrade = !filterGrade || s.grade === filterGrade;
+        const matchesGender = !filterGender || s.gender === filterGender;
+        return matchesSearch && matchesGrade && matchesGender;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align: center; padding: 32px; color: var(--text-muted);">No student records found matching the current search criteria.</td></tr>`;
+        return;
+      }
+
+      filtered.forEach((s) => {
+        const originalIndex = students.indexOf(s);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${s.admissionNo}</strong></td>
+          <td>${s.rollNo}</td>
+          <td><strong>${s.name}</strong></td>
+          <td><span class="badge badge-primary">${s.grade} - ${s.section}</span></td>
+          <td><span class="badge ${s.gender === 'Male' ? 'badge-gender-m' : 'badge-gender-f'}">${s.gender}</span></td>
+          <td>${s.dob}</td>
+          <td><span class="badge badge-blood">${s.bloodGroup}</span></td>
+          <td>${s.parent}</td>
+          <td>${s.phone}</td>
+          <td style="text-align: center;">
+            <div class="action-btns" style="justify-content: center;">
+              <button class="action-btn" title="View Full Details" onclick="viewDetails(${originalIndex})">👁️ View</button>
+              <button class="action-btn" title="Edit Entry" onclick="editStudent(${originalIndex})">✏️ Edit</button>
+              <button class="action-btn delete" title="Delete Entry" onclick="deleteStudent(${originalIndex})">🗑️</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function exportToCSV() {
+      if (students.length === 0) {
+        showToast("No student records to export!", "error");
+        return;
+      }
+      const headers = ["Admission No", "Roll No", "Student Name", "Class", "Section", "Gender", "Date of Birth", "Blood Group", "Parent / Guardian", "Contact Phone", "Email Address", "Residential Address", "Admission Date"];
+      const rows = students.map(s => [
+        `"${s.admissionNo}"`,
+        s.rollNo,
+        `"${s.name}"`,
+        `"${s.grade}"`,
+        `"${s.section}"`,
+        `"${s.gender}"`,
+        `"${s.dob}"`,
+        `"${s.bloodGroup}"`,
+        `"${s.parent}"`,
+        `"${s.phone}"`,
+        `"${s.email}"`,
+        `"${s.address}"`,
+        `"${s.admDate}"`
+      ]);
+
+      const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "prateek_model_school_students_roster.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast("Student roster exported successfully as CSV!");
+    }
+
+    window.onclick = function(event) {
+      const detailModal = document.getElementById('detailModal');
+      const syncModal = document.getElementById('syncModal');
+      if (event.target === detailModal) closeModal();
+      if (event.target === syncModal) closeSyncModal();
+    };
+
+    window.onload = function() {
+      initData();
+      resetEntryForm();
+    };
+  </script>
+</body>
+</html>
