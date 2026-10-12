@@ -589,9 +589,7 @@
     }
 
     .modal-header {
-    const DEFAULT_SUPABASE_URL = "https://your-project-id.supabase.co";
-const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."; 
- background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%);
+      background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%);
       color: #ffffff;
       padding: 18px 24px;
       display: flex;
@@ -714,7 +712,7 @@ const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
       <div class="header-badges">
         <span class="header-badge">CBSE Affiliation No: 3630198</span>
         <button class="sync-status-pill offline" id="syncStatusBadge" onclick="openSyncModal()">
-          <span id="syncDot">🟠</span> <span id="syncStatusText">Local Storage Mode</span>
+          <span id="syncDot">🟠</span> <span id="syncStatusText">Connecting to Supabase...</span>
         </button>
       </div>
     </div>
@@ -728,7 +726,7 @@ const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
         <div>
           <strong>Supabase PostgreSQL Cloud Database & Vercel Integration</strong>
           <p style="font-size: 0.82rem; color: #475569;" id="bannerDescription">
-            Connect to your Supabase PostgreSQL database to store and sync student admissions in real-time across any domain.
+            Pre-configured with your Supabase PostgreSQL cloud database. Admissions sync automatically worldwide.
           </p>
         </div>
       </div>
@@ -794,7 +792,7 @@ const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
             <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
             Student Admission Entry Form
           </h2>
-          <p>Register a student into the Supabase PostgreSQL database</p>
+          <p>Register a student directly into the Supabase PostgreSQL database</p>
         </div>
         <button class="btn btn-secondary btn-sm" type="button" onclick="fillSampleData()">
           ⚡ Auto-Fill Sample Record
@@ -912,7 +910,7 @@ const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
           </button>
           <button type="submit" class="btn btn-primary" id="submitBtn">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
-            Save to Cloud Database
+            Save to Supabase Database
           </button>
         </div>
       </form>
@@ -926,11 +924,11 @@ const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
             <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             Student Records Directory
           </h2>
-          <p>Search, filter, inspect, edit, or delete enrolled student entries</p>
+          <p>Live student roster synchronized with Supabase PostgreSQL</p>
         </div>
         <div class="toolbar-actions">
           <button class="btn btn-primary btn-sm" onclick="fetchFromSupabase()">
-            🔄 Refresh Supabase
+            🔄 Refresh from Supabase
           </button>
           <button class="btn btn-outline btn-sm" onclick="exportToCSV()">
             📥 Download CSV
@@ -998,7 +996,7 @@ const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
             <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             Supabase Cloud & Data Sync
           </h2>
-          <p>Connect your Supabase PostgreSQL project or export data offline</p>
+          <p>Live connection to your Supabase PostgreSQL project</p>
         </div>
       </div>
 
@@ -1007,10 +1005,10 @@ const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
           <div style="font-size: 2.2rem; margin-bottom: 12px;">⚡</div>
           <h3 style="font-size: 1.05rem; margin-bottom: 6px;">Supabase PostgreSQL Database</h3>
           <p style="color: var(--text-muted); font-size: 0.86rem; margin-bottom: 16px;">
-            Configure your Supabase Project URL and Anon Key to enable live cloud synchronization.
+            Pre-configured with Project <code>gidjbexjhicvxlzwkxgk</code>.
           </p>
           <button class="btn btn-primary btn-sm" onclick="openSyncModal()">
-            ⚙️ Configure Supabase Credentials
+            ⚙️ View / Edit Credentials
           </button>
         </div>
 
@@ -1038,32 +1036,22 @@ const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
       </div>
       <div class="modal-body">
         <p style="font-size: 0.88rem; color: #475569; margin-bottom: 16px;">
-          Enter your Supabase Project URL and Public Anon Key below. You can also paste them into the <code>DEFAULT_SUPABASE_URL</code> and <code>DEFAULT_SUPABASE_ANON_KEY</code> variables in <code>index.html</code> so all devices connect automatically!
+          Your Supabase Project URL and Public Anon Key are embedded below.
         </p>
 
         <div class="form-group" style="margin-bottom: 14px;">
           <label for="sbUrlInput">Supabase Project URL</label>
-          <input type="url" id="sbUrlInput" class="form-control" placeholder="https://your-project.supabase.co">
+          <input type="url" id="sbUrlInput" class="form-control">
         </div>
 
         <div class="form-group" style="margin-bottom: 16px;">
           <label for="sbKeyInput">Supabase Public Anon Key</label>
-          <input type="text" id="sbKeyInput" class="form-control" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
-        </div>
-
-        <div style="background: #f1f5f9; border-radius: 8px; padding: 14px; font-size: 0.82rem; color: #334155; line-height: 1.6;">
-          <strong>Quick Setup:</strong>
-          <ol style="margin-left: 18px; margin-top: 6px;">
-            <li>Create a free project at <a href="https://supabase.com" target="_blank" style="color: #2563eb;">supabase.com</a>.</li>
-            <li>In the <strong>SQL Editor</strong>, run the provided <code>supabase_setup.sql</code> script.</li>
-            <li>In <strong>Project Settings &gt; API</strong>, copy your <strong>Project URL</strong> and <strong>anon public key</strong>.</li>
-            <li>Paste them above and click <strong>Connect</strong>.</li>
-          </ol>
+          <input type="text" id="sbKeyInput" class="form-control">
         </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary btn-sm" onclick="closeSyncModal()">Cancel</button>
-        <button class="btn btn-primary btn-sm" onclick="saveSyncSettings()">Save & Connect</button>
+        <button class="btn btn-primary btn-sm" onclick="saveSyncSettings()">Save & Reconnect</button>
       </div>
     </div>
   </div>
@@ -1137,14 +1125,11 @@ const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
 
   <script>
     // =========================================================================
-    // SUPABASE CLOUD CONFIGURATION:
-    // If you paste your credentials below once, every user on any computer
-    // or domain will connect to your PostgreSQL database automatically!
+    // EMBEDDED SUPABASE CONFIGURATION:
     // =========================================================================
-    const DEFAULT_SUPABASE_URL = "";
-    const DEFAULT_SUPABASE_ANON_KEY = "";
+    const DEFAULT_SUPABASE_URL = "https://gidjbexjhicvxlzwkxgk.supabase.co";
+    const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZGpiZXhqaGljdnhsendreGdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3NzgzODUsImV4cCI6MjEwNzM1NDM4NX0.nFviNRzHkwH-BamubY6adoVX3pisBEKil5ISoHM_u9U";
 
-    // Embedded initial local data
     const INITIAL_RECORDS = [
   {
     "admissionNo": "PMS-2026-001",
@@ -1449,21 +1434,38 @@ const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
 ];
 
     let students = [];
-    let supabaseUrl = localStorage.getItem('pms_supabase_url') || DEFAULT_SUPABASE_URL;
-    let supabaseKey = localStorage.getItem('pms_supabase_key') || DEFAULT_SUPABASE_ANON_KEY;
+    let supabaseUrl = DEFAULT_SUPABASE_URL;
+    let supabaseKey = DEFAULT_SUPABASE_ANON_KEY;
     let supabaseClient = null;
 
+    function getSupabaseSDK() {
+      if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
+        return window.supabase;
+      }
+      if (typeof supabase !== 'undefined' && supabase.createClient) {
+        return supabase;
+      }
+      return null;
+    }
+
     function initSupabase() {
-      if (supabaseUrl && supabaseKey && window.supabase) {
+      const sbLib = getSupabaseSDK();
+      if (supabaseUrl && supabaseKey && sbLib) {
         try {
-          supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
-          // Set up realtime channel
-          supabaseClient
-            .channel('public:students')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'students' }, () => {
-              fetchFromSupabase(true);
-            })
-            .subscribe();
+          supabaseClient = sbLib.createClient(supabaseUrl, supabaseKey);
+          
+          // Setup real-time channel
+          try {
+            supabaseClient
+              .channel('public:students')
+              .on('postgres_changes', { event: '*', schema: 'public', table: 'students' }, () => {
+                fetchFromSupabase(true);
+              })
+              .subscribe();
+          } catch(chanErr) {
+            console.log('Realtime subscription info:', chanErr);
+          }
+
           return true;
         } catch (e) {
           console.error('Supabase init error:', e);
@@ -1476,9 +1478,11 @@ const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
     }
 
     function initData() {
-      initSupabase();
+      // Try to connect to Supabase
+      const isConnected = initSupabase();
       updateSyncStatusUI();
 
+      // Load local cache first to ensure immediate display
       const stored = localStorage.getItem('prateek_model_school_students');
       if (stored) {
         try {
@@ -1493,9 +1497,17 @@ const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
       updateKPIs();
       renderTable();
 
-      // If Supabase is active, fetch from PostgreSQL
-      if (supabaseClient) {
+      // Fetch live data from Supabase PostgreSQL
+      if (isConnected) {
         fetchFromSupabase(true);
+      } else {
+        // Retry connection in 500ms in case CDN took time to load
+        setTimeout(() => {
+          if (initSupabase()) {
+            updateSyncStatusUI();
+            fetchFromSupabase(true);
+          }
+        }, 600);
       }
     }
 
@@ -1509,12 +1521,12 @@ const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
         badge.className = 'sync-status-pill';
         dot.innerText = '🟢';
         text.innerText = 'Connected to Supabase';
-        desc.innerText = 'Connected to Supabase PostgreSQL database. Real-time sync enabled across all devices.';
+        desc.innerText = 'Connected to Supabase PostgreSQL database (Project: gidjbexjhicvxlzwkxgk). Admissions sync automatically worldwide.';
       } else {
         badge.className = 'sync-status-pill offline';
         dot.innerText = '🟠';
-        text.innerText = 'Local Storage Mode';
-        desc.innerText = 'Operating in local browser storage. Connect Supabase to sync PostgreSQL records across any domain.';
+        text.innerText = 'Connecting...';
+        desc.innerText = 'Initializing connection to Supabase cloud database...';
       }
     }
 
@@ -1652,9 +1664,10 @@ const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
         }
         students.push(record);
         saveLocalData();
-        showToast(`Student "${record.name}" registered locally.`);
+        showToast(`Student "${record.name}" saved locally.`);
 
         if (supabaseClient) {
+          showToast(`Saving "${record.name}" to Supabase...`, 'info');
           try {
             const { error } = await supabaseClient
               .from('students')
@@ -1689,7 +1702,10 @@ const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
 
     async function fetchFromSupabase(silent = false) {
       if (!supabaseClient) {
-        if (!silent) showToast("Supabase not configured.", "error");
+        initSupabase();
+      }
+      if (!supabaseClient) {
+        if (!silent) showToast("Supabase client not initialized.", "error");
         return;
       }
       if (!silent) showToast("Fetching student records from Supabase...", "info");
@@ -1722,11 +1738,11 @@ const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
           renderTable();
           if (!silent) showToast(`Loaded ${data.length} records from Supabase!`, 'success');
         } else {
-          if (!silent) showToast("Supabase table is empty.", "info");
+          if (!silent) showToast("Supabase table is currently empty.", "info");
         }
       } catch (err) {
-        console.error(err);
-        if (!silent) showToast("Error connecting to Supabase table.", "error");
+        console.error('Fetch error:', err);
+        if (!silent) showToast("Could not load from Supabase. Ensure SQL setup was run.", "error");
       }
     }
 
@@ -1735,7 +1751,7 @@ const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
       document.getElementById('editIndex').value = "-1";
       document.getElementById('submitBtn').innerHTML = `
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
-        Save to Cloud Database
+        Save to Supabase Database
       `;
       const nextNum = students.length + 1;
       document.getElementById('admissionNo').value = `PMS-2026-${String(nextNum).padStart(3, '0')}`;
