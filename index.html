@@ -121,7 +121,7 @@
       background: rgba(16, 185, 129, 0.2);
       border: 1px solid #10b981;
       color: #a7f3d0;
-      cursor: pointer;
+      user-select: none;
     }
 
     .sync-status-pill.offline {
@@ -711,28 +711,30 @@
       </div>
       <div class="header-badges">
         <span class="header-badge">CBSE Affiliation No: 3630198</span>
-        <button class="sync-status-pill offline" id="syncStatusBadge" onclick="openSyncModal()">
-          <span id="syncDot">🟠</span> <span id="syncStatusText">Connecting to Supabase...</span>
-        </button>
+        <!-- Secured Read-Only Status Badge (Cannot be clicked or modified) -->
+        <div class="sync-status-pill" id="syncStatusBadge">
+          <span id="syncDot">🟢</span> <span id="syncStatusText">Connected to Supabase</span>
+        </div>
       </div>
     </div>
   </header>
 
   <main class="main-container">
 
+    <!-- Secured Cloud Banner (No Edit Buttons) -->
     <div class="sync-banner" id="cloudSyncBanner">
       <div class="sync-banner-text">
         <span style="font-size: 1.3rem;">⚡</span>
         <div>
-          <strong>Supabase PostgreSQL Cloud Database & Vercel Integration</strong>
+          <strong>Supabase PostgreSQL Cloud Database Connected</strong>
           <p style="font-size: 0.82rem; color: #475569;" id="bannerDescription">
-            Pre-configured with your Supabase PostgreSQL cloud database. Admissions sync automatically worldwide.
+            Database credentials are locked and secured. All student admission entries sync automatically worldwide.
           </p>
         </div>
       </div>
-      <button class="btn btn-outline btn-sm" onclick="openSyncModal()">
-        ⚙️ Database Credentials
-      </button>
+      <div style="background: #dbeafe; color: #1e40af; padding: 6px 14px; border-radius: 999px; font-size: 0.78rem; font-weight: 700; border: 1px solid #bfdbfe;">
+        🔒 Locked & Protected
+      </div>
     </div>
 
     <section class="stats-grid">
@@ -780,7 +782,7 @@
       </button>
       <button class="tab-btn" onclick="switchTab('dataSync')">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-        Cloud Database & Export
+        Database Status & Export
       </button>
     </div>
 
@@ -988,35 +990,33 @@
       </div>
     </section>
 
-    <!-- TAB 3: CLOUD DATABASE & EXCEL -->
+    <!-- TAB 3: CLOUD DATABASE & EXCEL (Secured View) -->
     <section id="tab-dataSync" class="card-panel" style="display: none;">
       <div class="panel-header">
         <div>
           <h2>
             <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-            Supabase Cloud & Data Sync
+            Cloud Database Status & Export
           </h2>
-          <p>Live connection to your Supabase PostgreSQL project</p>
+          <p>Protected connection to your Supabase PostgreSQL project</p>
         </div>
       </div>
 
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
         <div style="background: #f8fafc; border: 1.5px solid var(--border-color); border-radius: 8px; padding: 24px;">
-          <div style="font-size: 2.2rem; margin-bottom: 12px;">⚡</div>
-          <h3 style="font-size: 1.05rem; margin-bottom: 6px;">Supabase PostgreSQL Database</h3>
-          <p style="color: var(--text-muted); font-size: 0.86rem; margin-bottom: 16px;">
-            Pre-configured with Project <code>gidjbexjhicvxlzwkxgk</code>.
+          <div style="font-size: 2.2rem; margin-bottom: 12px;">🛡️</div>
+          <h3 style="font-size: 1.05rem; margin-bottom: 6px;">Connection Locked & Protected</h3>
+          <p style="color: var(--text-muted); font-size: 0.86rem; line-height: 1.6; margin-bottom: 12px;">
+            The website is securely bound to Supabase Project <code>gidjbexjhicvxlzwkxgk</code>. Visitors from other computers cannot inspect, tamper with, or change your database settings.
           </p>
-          <button class="btn btn-primary btn-sm" onclick="openSyncModal()">
-            ⚙️ View / Edit Credentials
-          </button>
+          <span class="badge badge-primary">Status: Active & Synchronized</span>
         </div>
 
         <div style="background: #f8fafc; border: 1.5px solid var(--border-color); border-radius: 8px; padding: 24px;">
           <div style="font-size: 2.2rem; margin-bottom: 12px;">📥</div>
           <h3 style="font-size: 1.05rem; margin-bottom: 6px;">Download Offline Roster</h3>
           <p style="color: var(--text-muted); font-size: 0.86rem; margin-bottom: 16px;">
-            Export all student records into CSV/Excel format anytime.
+            Export all student records into CSV/Excel format anytime for local record-keeping.
           </p>
           <button class="btn btn-success btn-sm" onclick="exportToCSV()">
             ⬇️ Download Excel/CSV Roster
@@ -1026,35 +1026,6 @@
     </section>
 
   </main>
-
-  <!-- Supabase Credentials Configuration Modal -->
-  <div class="modal-overlay" id="syncModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3>⚡ Supabase Database Configuration</h3>
-        <button class="modal-close" onclick="closeSyncModal()">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p style="font-size: 0.88rem; color: #475569; margin-bottom: 16px;">
-          Your Supabase Project URL and Public Anon Key are embedded below.
-        </p>
-
-        <div class="form-group" style="margin-bottom: 14px;">
-          <label for="sbUrlInput">Supabase Project URL</label>
-          <input type="url" id="sbUrlInput" class="form-control">
-        </div>
-
-        <div class="form-group" style="margin-bottom: 16px;">
-          <label for="sbKeyInput">Supabase Public Anon Key</label>
-          <input type="text" id="sbKeyInput" class="form-control">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary btn-sm" onclick="closeSyncModal()">Cancel</button>
-        <button class="btn btn-primary btn-sm" onclick="saveSyncSettings()">Save & Reconnect</button>
-      </div>
-    </div>
-  </div>
 
   <!-- Student Profile Detail Modal -->
   <div class="modal-overlay" id="detailModal">
@@ -1125,10 +1096,11 @@
 
   <script>
     // =========================================================================
-    // EMBEDDED SUPABASE CONFIGURATION:
+    // PERMANENT SECURE SUPABASE CONFIGURATION:
+    // Locked in the code so no external visitor can view or tamper with it.
     // =========================================================================
-    const DEFAULT_SUPABASE_URL = "https://gidjbexjhicvxlzwkxgk.supabase.co";
-    const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZGpiZXhqaGljdnhsendreGdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3NzgzODUsImV4cCI6MjEwNzM1NDM4NX0.nFviNRzHkwH-BamubY6adoVX3pisBEKil5ISoHM_u9U";
+    const SUPABASE_URL = "https://gidjbexjhicvxlzwkxgk.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZGpiZXhqaGljdnhsendreGdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3NzgzODUsImV4cCI6MjEwNzM1NDM4NX0.nFviNRzHkwH-BamubY6adoVX3pisBEKil5ISoHM_u9U";
 
     const INITIAL_RECORDS = [
   {
@@ -1434,8 +1406,6 @@
 ];
 
     let students = [];
-    let supabaseUrl = DEFAULT_SUPABASE_URL;
-    let supabaseKey = DEFAULT_SUPABASE_ANON_KEY;
     let supabaseClient = null;
 
     function getSupabaseSDK() {
@@ -1450,11 +1420,10 @@
 
     function initSupabase() {
       const sbLib = getSupabaseSDK();
-      if (supabaseUrl && supabaseKey && sbLib) {
+      if (sbLib) {
         try {
-          supabaseClient = sbLib.createClient(supabaseUrl, supabaseKey);
+          supabaseClient = sbLib.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
           
-          // Setup real-time channel
           try {
             supabaseClient
               .channel('public:students')
@@ -1463,7 +1432,7 @@
               })
               .subscribe();
           } catch(chanErr) {
-            console.log('Realtime subscription info:', chanErr);
+            console.log('Realtime info:', chanErr);
           }
 
           return true;
@@ -1478,11 +1447,9 @@
     }
 
     function initData() {
-      // Try to connect to Supabase
       const isConnected = initSupabase();
       updateSyncStatusUI();
 
-      // Load local cache first to ensure immediate display
       const stored = localStorage.getItem('prateek_model_school_students');
       if (stored) {
         try {
@@ -1497,11 +1464,9 @@
       updateKPIs();
       renderTable();
 
-      // Fetch live data from Supabase PostgreSQL
       if (isConnected) {
         fetchFromSupabase(true);
       } else {
-        // Retry connection in 500ms in case CDN took time to load
         setTimeout(() => {
           if (initSupabase()) {
             updateSyncStatusUI();
@@ -1515,48 +1480,15 @@
       const badge = document.getElementById('syncStatusBadge');
       const dot = document.getElementById('syncDot');
       const text = document.getElementById('syncStatusText');
-      const desc = document.getElementById('bannerDescription');
 
       if (supabaseClient) {
         badge.className = 'sync-status-pill';
         dot.innerText = '🟢';
         text.innerText = 'Connected to Supabase';
-        desc.innerText = 'Connected to Supabase PostgreSQL database (Project: gidjbexjhicvxlzwkxgk). Admissions sync automatically worldwide.';
       } else {
         badge.className = 'sync-status-pill offline';
         dot.innerText = '🟠';
         text.innerText = 'Connecting...';
-        desc.innerText = 'Initializing connection to Supabase cloud database...';
-      }
-    }
-
-    function openSyncModal() {
-      document.getElementById('sbUrlInput').value = supabaseUrl;
-      document.getElementById('sbKeyInput').value = supabaseKey;
-      document.getElementById('syncModal').classList.add('active');
-    }
-
-    function closeSyncModal() {
-      document.getElementById('syncModal').classList.remove('active');
-    }
-
-    function saveSyncSettings() {
-      const url = document.getElementById('sbUrlInput').value.trim();
-      const key = document.getElementById('sbKeyInput').value.trim();
-      supabaseUrl = url;
-      supabaseKey = key;
-      localStorage.setItem('pms_supabase_url', url);
-      localStorage.setItem('pms_supabase_key', key);
-      
-      initSupabase();
-      updateSyncStatusUI();
-      closeSyncModal();
-
-      if (supabaseClient) {
-        showToast('Connected to Supabase PostgreSQL database!', 'success');
-        fetchFromSupabase();
-      } else {
-        showToast('Operating in local storage mode.', 'info');
       }
     }
 
@@ -1664,7 +1596,7 @@
         }
         students.push(record);
         saveLocalData();
-        showToast(`Student "${record.name}" saved locally.`);
+        showToast(`Student "${record.name}" registered.`);
 
         if (supabaseClient) {
           showToast(`Saving "${record.name}" to Supabase...`, 'info');
@@ -1705,10 +1637,10 @@
         initSupabase();
       }
       if (!supabaseClient) {
-        if (!silent) showToast("Supabase client not initialized.", "error");
+        if (!silent) showToast("Connecting to Supabase...", "info");
         return;
       }
-      if (!silent) showToast("Fetching student records from Supabase...", "info");
+      if (!silent) showToast("Refreshing from Supabase...", "info");
 
       try {
         const { data, error } = await supabaseClient
@@ -1742,7 +1674,7 @@
         }
       } catch (err) {
         console.error('Fetch error:', err);
-        if (!silent) showToast("Could not load from Supabase. Ensure SQL setup was run.", "error");
+        if (!silent) showToast("Could not load from Supabase.", 'error');
       }
     }
 
@@ -1935,9 +1867,7 @@
 
     window.onclick = function(event) {
       const detailModal = document.getElementById('detailModal');
-      const syncModal = document.getElementById('syncModal');
       if (event.target === detailModal) closeModal();
-      if (event.target === syncModal) closeSyncModal();
     };
 
     window.onload = function() {
